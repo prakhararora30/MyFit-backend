@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <rect width="100%" height="100%" fill="#1e293b" rx="20"/>
+  <g transform="translate(40, 60)">
+    <path d="M15 45 C15 35 25 20 45 20 L65 24 L85 35 L110 40 C115 45 115 55 105 55 L15 55 Z" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
+    <rect x="12" y="52" width="98" height="8" rx="3" fill="#cbd5e1"/>
+    <path d="M50 22 L75 36" stroke="#0284c7" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <text x="100" y="175" fill="#94a3b8" font-size="12" font-family="sans-serif" font-weight="bold" text-anchor="middle">Classic Sneaker (10 UK)</text>
+</svg>

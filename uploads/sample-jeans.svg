@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <rect width="100%" height="100%" fill="#1e293b" rx="20"/>
+  <g transform="translate(50, 30)">
+    <path d="M22 10 L78 10 L76 120 L53 120 L50 45 L47 120 L24 120 Z" fill="#1e3a8a" stroke="#0f172a" stroke-width="2"/>
+    <path d="M22 25 L78 25" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="2 2"/>
+    <path d="M50 10 L50 35" stroke="#0f172a" stroke-width="2"/>
+  </g>
+  <text x="100" y="175" fill="#94a3b8" font-size="12" font-family="sans-serif" font-weight="bold" text-anchor="middle">Selvedge Jeans (32)</text>
+</svg>
