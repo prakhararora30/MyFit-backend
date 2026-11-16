@@ -3,7 +3,15 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const path = require('path');
 const fs = require('fs');
+const dns = require('dns');
 require('dotenv').config();
+
+// Ensure reliable DNS resolution for MongoDB Atlas SRV records
+try {
+  dns.setServers(['8.8.8.8', '8.8.4.4']);
+} catch (e) {
+  // Ignore if restricted
+}
 
 const clothRoutes = require('./routes/clothRoutes');
 const outfitRoutes = require('./routes/outfitRoutes');
