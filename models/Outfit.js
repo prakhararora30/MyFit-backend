@@ -23,17 +23,17 @@ const outfitSchema = new mongoose.Schema(
       top: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Cloth',
-        required: true,
+        default: null,
       },
       jeans: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Cloth',
-        required: true,
+        default: null,
       },
       shoes: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Cloth',
-        required: true,
+        default: null,
       },
       belt: {
         type: mongoose.Schema.Types.ObjectId,

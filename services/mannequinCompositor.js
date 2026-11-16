@@ -52,14 +52,19 @@ async function composeOutfitImage({ top, jacket, jeans, shoes, belt, outputFilen
     <path d="M250 280 L210 570 L240 570 L265 280 Z" fill="url(#mannequinGrad)"/>
   </g>
 
-  <!-- LAYER 1: BASE TOP (Shirt or T-Shirt) -->
+  <!-- LAYER 1: BASE TOP (Shirt or T-Shirt, if present) -->
+  ${
+    top
+      ? `
   <g id="base-top" filter="url(#shadow)">
-    <!-- Base Shirt / Tee shape -->
     <path d="M145 130 C175 145 225 145 255 130 L295 190 L265 205 L250 180 L250 330 L150 330 L150 180 L135 205 L105 190 Z" 
           fill="${topColor === 'white' ? '#f8fafc' : topColor}" 
           stroke="#475569" stroke-width="2"/>
     <path d="M145 130 C175 150 225 150 255 130" stroke="#94a3b8" stroke-width="3" fill="none"/>
   </g>
+  `
+      : ''
+  }
 
   <!-- LAYER 2: OUTERWEAR (Jacket, if present) -->
   ${
@@ -93,7 +98,10 @@ async function composeOutfitImage({ top, jacket, jeans, shoes, belt, outputFilen
       : ''
   }
 
-  <!-- LAYER 4: BOTTOMS (Jeans / Trousers) -->
+  <!-- LAYER 4: BOTTOMS (Jeans / Trousers, if present) -->
+  ${
+    jeans
+      ? `
   <g id="bottom-jeans" filter="url(#shadow)">
     <path d="M145 335 L255 335 L250 560 L208 560 L200 395 L192 560 L150 560 Z" 
           fill="${jeansColor === 'black' ? '#1e293b' : jeansColor}" 
@@ -101,8 +109,14 @@ async function composeOutfitImage({ top, jacket, jeans, shoes, belt, outputFilen
     <path d="M145 355 L255 355" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="3 3"/>
     <path d="M200 335 L200 380" stroke="#0f172a" stroke-width="2"/>
   </g>
+  `
+      : ''
+  }
 
-  <!-- LAYER 5: FOOTWEAR (Shoes / Sneakers) -->
+  <!-- LAYER 5: FOOTWEAR (Shoes / Sneakers, if present) -->
+  ${
+    shoes
+      ? `
   <g id="footwear-shoes" filter="url(#shadow)">
     <!-- Left Shoe -->
     <path d="M135 560 C135 545 145 530 170 530 L195 540 L205 570 L130 570 Z" 
@@ -116,6 +130,9 @@ async function composeOutfitImage({ top, jacket, jeans, shoes, belt, outputFilen
           stroke="#64748b" stroke-width="1.5"/>
     <rect x="192" y="565" width="82" height="10" rx="3" fill="#cbd5e1"/>
   </g>
+  `
+      : ''
+  }
 
   <!-- Watermark / Brand Badge -->
   <text x="200" y="632" font-family="sans-serif" font-size="11" font-weight="bold" fill="#64748b" text-anchor="middle" letter-spacing="1.5">

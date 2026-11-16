@@ -38,17 +38,15 @@ function calculateColorMatch(color1, color2) {
  * Fallback algorithmic fashion engine that generates 5 to 7 outfits
  */
 function generateRuleBasedOutfits(clothes, requestedCount = 7) {
+  if (!clothes || clothes.length === 0) {
+    throw new Error('Your wardrobe is empty! Please add at least one cloth item first.');
+  }
+
   const jackets = clothes.filter((c) => c.category === 'jackets');
   const tops = clothes.filter((c) => c.category === 'shirts' || c.category === 'tshirts');
   const jeans = clothes.filter((c) => c.category === 'jeans');
   const shoes = clothes.filter((c) => c.category === 'shoes');
   const belts = clothes.filter((c) => c.category === 'belts' || c.category === 'accessories');
-
-  if (tops.length === 0 || jeans.length === 0 || shoes.length === 0) {
-    throw new Error(
-      'To generate complete outfits, your wardrobe needs at least 1 Top (shirt or t-shirt), 1 Jeans/Pants, and 1 pair of Shoes!'
-    );
-  }
 
   const generated = [];
   const vibes = [
@@ -61,17 +59,28 @@ function generateRuleBasedOutfits(clothes, requestedCount = 7) {
     { title: 'High-Tone Monochrome', vibe: 'Night Out', desc: 'Tonal dark layers creating a cohesive and sharp streamlined look.' },
   ];
 
-  const targetCount = Math.min(requestedCount, Math.max(5, tops.length * jeans.length));
+  const targetCount = requestedCount || 7;
 
   for (let i = 0; i < targetCount; i++) {
-    const top = tops[i % tops.length];
-    const jean = jeans[(i + Math.floor(i / tops.length)) % jeans.length];
-    const shoe = shoes[i % shoes.length];
-    const jacket = jackets.length > 0 && i % 2 === 0 ? jackets[i % jackets.length] : null;
+    const top = tops.length > 0 ? tops[i % tops.length] : null;
+    const jean = jeans.length > 0 ? jeans[(i + Math.floor(i / (tops.length || 1))) % jeans.length] : null;
+    const shoe = shoes.length > 0 ? shoes[i % shoes.length] : null;
+    const jacket = jackets.length > 0 && (i % 2 === 0 || tops.length === 0) ? jackets[i % jackets.length] : null;
     const belt = belts.length > 0 ? belts[i % belts.length] : null;
 
     const meta = vibes[i % vibes.length];
     const score = Math.floor(92 + (i * 7) % 7);
+
+    // Build description based strictly on the items actually present in the wardrobe
+    const availablePieces = [
+      top ? `${top.dominantColor || ''} ${top.title}` : null,
+      jean ? jean.title : null,
+      shoe ? shoe.title : null,
+      jacket ? `layered with ${jacket.title}` : null,
+      belt ? `with ${belt.title}` : null,
+    ].filter(Boolean);
+
+    const comboText = availablePieces.length > 0 ? availablePieces.join(' + ') : 'Wardrobe Essentials';
 
     generated.push({
       title: `Look #${i + 1}: ${meta.title}`,
@@ -79,14 +88,12 @@ function generateRuleBasedOutfits(clothes, requestedCount = 7) {
       matchScore: `${score}%`,
       items: {
         jacket: jacket ? jacket._id : null,
-        top: top._id,
-        jeans: jean._id,
-        shoes: shoe._id,
+        top: top ? top._id : null,
+        jeans: jean ? jean._id : null,
+        shoes: shoe ? shoe._id : null,
         belt: belt ? belt._id : null,
       },
-      aiStylistNotes: `AI Stylist: ${meta.desc} Pairs ${top.dominantColor || 'base'} ${top.title} with ${jean.title} and ${shoe.title}.${
-        jacket ? ` Draped with ${jacket.title} for outer structure.` : ''
-      }`,
+      aiStylistNotes: `AI Stylist: ${meta.desc} Styled with: ${comboText}.`,
     });
   }
 
@@ -121,14 +128,14 @@ TASK:
 Generate exactly ${count} fashionable, perfectly coordinated outfit combinations (minimum 5, target 7).
 
 RULES:
-1. Each outfit MUST have:
-   - "top": an item id from category "shirts" or "tshirts"
-   - "jeans": an item id from category "jeans"
-   - "shoes": an item id from category "shoes"
+1. Work dynamically with WHATEVER items are available in the user's wardrobe:
+   - "top": an item id from category "shirts" or "tshirts", or null if none exist in the wardrobe
+   - "jeans": an item id from category "jeans", or null if none exist in the wardrobe
+   - "shoes": an item id from category "shoes", or null if none exist in the wardrobe
    - "jacket": (optional) an item id from category "jackets", or null
    - "belt": (optional) an item id from category "belts", or null
-2. Do not repeat identical combinations. Ensure variety in vibes (Casual Weekend, Smart Work, Date Night, Streetwear).
-3. Apply color harmony (e.g. complementary, monochromatic, contrast).
+2. Do NOT require items that are not present in the wardrobe. Merge and coordinate the available clothes seamlessly.
+3. Do not repeat identical combinations. Ensure variety in vibes (Casual Weekend, Smart Work, Date Night, Streetwear).
 
 RETURN ONLY RAW JSON in this exact structure:
 [

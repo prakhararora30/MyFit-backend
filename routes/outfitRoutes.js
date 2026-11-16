@@ -32,9 +32,9 @@ router.post('/generate', async (req, res) => {
     for (let i = 0; i < rawOutfits.length; i++) {
       const raw = rawOutfits[i];
 
-      const topItem = await Cloth.findById(raw.items.top);
-      const jeansItem = await Cloth.findById(raw.items.jeans);
-      const shoesItem = await Cloth.findById(raw.items.shoes);
+      const topItem = raw.items.top ? await Cloth.findById(raw.items.top) : null;
+      const jeansItem = raw.items.jeans ? await Cloth.findById(raw.items.jeans) : null;
+      const shoesItem = raw.items.shoes ? await Cloth.findById(raw.items.shoes) : null;
       const jacketItem = raw.items.jacket ? await Cloth.findById(raw.items.jacket) : null;
       const beltItem = raw.items.belt ? await Cloth.findById(raw.items.belt) : null;
 
@@ -54,9 +54,9 @@ router.post('/generate', async (req, res) => {
         matchScore: raw.matchScore || '95%',
         items: {
           jacket: jacketItem ? jacketItem._id : null,
-          top: topItem._id,
-          jeans: jeansItem._id,
-          shoes: shoesItem._id,
+          top: topItem ? topItem._id : null,
+          jeans: jeansItem ? jeansItem._id : null,
+          shoes: shoesItem ? shoesItem._id : null,
           belt: beltItem ? beltItem._id : null,
         },
         compositeImageUrl: compositeImageUrl,
