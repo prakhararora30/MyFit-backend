@@ -154,7 +154,7 @@ RETURN ONLY RAW JSON in this exact structure:
   }
 ]`;
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key=${apiKey}`;
 
     const requestBody = JSON.stringify({
       contents: [{ parts: [{ text: prompt }] }],

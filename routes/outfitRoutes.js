@@ -1,9 +1,12 @@
 const express = require('express');
 const router = express.Router();
+const fs = require('fs');
+const path = require('path');
 const Outfit = require('../models/Outfit');
 const Cloth = require('../models/Cloth');
 const { generateOutfits } = require('../services/aiStylistService');
 const { composeOutfitImage } = require('../services/mannequinCompositor');
+
 
 /**
  * POST /api/outfits/generate
@@ -22,6 +25,17 @@ router.post('/generate', async (req, res) => {
         message: 'Your wardrobe is empty! Please add shirts, jeans, and shoes first.',
       });
     }
+
+    // Delete old outfits + their SVG composites before generating fresh ones
+    const oldOutfits = await Outfit.find({});
+    for (const old of oldOutfits) {
+      if (old.compositeImageUrl && old.compositeImageUrl.startsWith('/uploads/')) {
+        const oldFilePath = path.join(__dirname, '..', old.compositeImageUrl);
+        try { if (fs.existsSync(oldFilePath)) fs.unlinkSync(oldFilePath); } catch (_) {}
+      }
+    }
+    await Outfit.deleteMany({});
+
 
     // Generate 5-7 coordinated outfit combinations via AI Stylist
     const rawOutfits = await generateOutfits(clothes, count);
